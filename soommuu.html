@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gym Registration with Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #f72585, #7209b7, #4361ee, #4cc9f0);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      margin: 0;
+      padding: 0;
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .form-container, .details-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: rgba(255,255,255,0.95);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #3a0ca3;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #240046;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 2px solid #4cc9f0;
+      border-radius: 6px;
+      background-color: #f8f9fa;
+      color: #111;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #999;
+      font-style: italic;
+    }
+
+    .payment-options label {
+      display: block;
+      margin-top: 10px;
+      font-weight: normal;
+      color: #555;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background-color: #f72585;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #7209b7;
+    }
+
+    .details-container {
+      display: none;
+    }
+
+    .details-container p {
+      font-size: 15px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>💪 Gym Registration</h1>
+    <form id="gymForm">
+      <label for="fname">First Name:</label>
+      <input type="text" id="fname" placeholder="Your first name" required>
+
+      <label for="lname">Last Name:</label>
+      <input type="text" id="lname" placeholder="Your last name" required>
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
+
+      <label for="startdate">Membership Start Date:</label>
+      <input type="date" id="startdate" required>
+
+      <label>Membership Duration:</label>
+      <select id="duration" required>
+        <option value="">--Choose Duration--</option>
+        <option value="1">1 Month</option>
+        <option value="3">3 Months</option>
+        <option value="6">6 Months</option>
+        <option value="12">1 Year</option>
+        <option value="Lifetime">Lifetime</option>
+      </select>
+
+      <label>Payment Type:</label>
+      <div class="payment-options">
+        <label><input type="radio" name="payment" value="Full Cash" required> Full Cash</label>
+        <label><input type="radio" name="payment" value="Debit Card"> Debit Card</label>
+        <label><input type="radio" name="payment" value="Credit Card"> Credit Card</label>
+        <label><input type="radio" name="payment" value="Cheque"> Cheque</label>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <div class="details-container" id="details">
+    <h1>✅ Registration Details</h1>
+    <p><strong>First Name:</strong> <span id="d_fname"></span></p>
+    <p><strong>Last Name:</strong> <span id="d_lname"></span></p>
+    <p><strong>Email:</strong> <span id="d_email"></span></p>
+    <p><strong>Start Date:</strong> <span id="d_startdate"></span></p>
+    <p><strong>Duration:</strong> <span id="d_duration"></span></p>
+    <p><strong>Payment Type:</strong> <span id="d_payment"></span></p>
+  </div>
+
+  <script>
+    document.getElementById('gymForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get values
+      document.getElementById('d_fname').textContent = document.getElementById('fname').value;
+      document.getElementById('d_lname').textContent = document.getElementById('lname').value;
+      document.getElementById('d_email').textContent = document.getElementById('email').value;
+      document.getElementById('d_startdate').textContent = document.getElementById('startdate').value;
+      document.getElementById('d_duration').textContent = document.getElementById('duration').value;
+      
+      const paymentType = document.querySelector('input[name="payment"]:checked');
+      document.getElementById('d_payment').textContent = paymentType ? paymentType.value : 'Not selected';
+
+      // Show the details section
+      document.querySelector('.form-container').style.display = 'none';
+      document.getElementById('details').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
+
