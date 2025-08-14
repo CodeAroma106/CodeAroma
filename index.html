@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login with Tea Emoji Greeting</title>
+  <style>
+    /* ... (same styles as before) ... */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background-color 1s ease;
+      margin: 0;
+      color: #000; /* default text color */
+    }
+    .login-container {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 320px;
+      color: #000;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 40px 10px 10px;
+      margin: 8px 0 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+      color: #000;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
+      font-size: 18px;
+      color: #888;
+    }
+    button {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 12px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 8px;
+      height: 18px;
+    }
+    #greetingMessage {
+      display: none;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 8px;
+      width: 320px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container" id="loginContainer">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter your username" />
+      <div id="usernameError" class="error"></div>
+
+      <label for="password">Password</label>
+      <div class="password-container">
+        <input type="password" id="password" name="password" placeholder="Enter your password" />
+        <span id="togglePassword" class="toggle-password" title="Show/Hide Password">&#128065;</span>
+      </div>
+      <div id="passwordError" class="error"></div>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="greetingMessage"></div>
+
+  <script>
+    // Password toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.textContent = type === 'password' ? '\u{1F441}' : '\u{1F441}\u{FE0E}';
+    });
+
+    // Validation function
+    function validateForm() {
+      document.getElementById('usernameError').textContent = '';
+      document.getElementById('passwordError').textContent = '';
+
+      const username = document.getElementById('username').value.trim();
+      const password = passwordInput.value;
+      let valid = true;
+
+      const usernameRegex = /^[a-zA-Z0-9]+$/;
+      if (username === '') {
+        document.getElementById('usernameError').textContent = 'Please enter your username.';
+        valid = false;
+      } else if (!usernameRegex.test(username)) {
+        document.getElementById('usernameError').textContent = 'Username can only contain letters and numbers.';
+        valid = false;
+      }
+
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+      const lowercaseRegex = /[a-z]/;
+      const uppercaseRegex = /[A-Z]/;
+
+      if (password === '') {
+        document.getElementById('passwordError').textContent = 'Please enter your password.';
+        valid = false;
+      } else if (password.length > 8) {
+        document.getElementById('passwordError').textContent = 'Password must be 8 characters or less.';
+        valid = false;
+      } else if (!specialCharRegex.test(password)) {
+        document.getElementById('passwordError').textContent = 'Password must contain at least one special character.';
+        valid = false;
+      } else if (!lowercaseRegex.test(password)) {
+        document.getElementById('passwordError').textContent = 'Password must contain at least one lowercase letter.';
+        valid = false;
+      } else if (!uppercaseRegex.test(password)) {
+        document.getElementById('passwordError').textContent = 'Password must contain at least one uppercase letter.';
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    // Background colors and text color calculation helper
+    const colors = ['#f0f2f5', '#a8dadc', '#ffb4a2', '#ffe066', '#caf7e3'];
+    let currentColorIndex = 0;
+
+    function getBrightness(hexColor) {
+      const c = hexColor.substring(1);
+      const r = parseInt(c.substring(0,2),16);
+      const g = parseInt(c.substring(2,4),16);
+      const b = parseInt(c.substring(4,6),16);
+      return (r * 299 + g * 587 + b * 114) / 1000;
+    }
+
+    function changeBackgroundColor() {
+      const bgColor = colors[currentColorIndex];
+      document.body.style.backgroundColor = bgColor;
+
+      const brightness = getBrightness(bgColor);
+      const textColor = brightness > 155 ? '#000000' : '#ffffff';
+
+      document.body.style.color = textColor;
+      document.querySelector('.login-container').style.color = textColor;
+      document.getElementById('greetingMessage').style.color = textColor;
+
+      currentColorIndex = (currentColorIndex + 1) % colors.length;
+    }
+
+    setInterval(changeBackgroundColor, 3000);
+    changeBackgroundColor();
+
+    // Handle form submit
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (validateForm()) {
+        document.getElementById('loginContainer').style.display = 'none';
+
+        const username = document.getElementById('username').value.trim();
+        const greetingDiv = document.getElementById('greetingMessage');
+
+        const now = new Date();
+        const hour = now.getHours();
+        const greeting = hour < 12 ? 'Good Morning' : 'Good Afternoon';
+        const teaEmoji = ' ☕️';
+
+        greetingDiv.textContent = `${greeting}${teaEmoji}, ${username}!`;
+        greetingDiv.style.display = 'block';
+      }
+    });
+  </script>
+
+</body>
+</html>
